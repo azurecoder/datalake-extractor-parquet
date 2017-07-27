@@ -67,6 +67,7 @@
     <Reference Include="Microsoft.Analytics.Types" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Outputter\DataSetBuilder.cs" />
     <Compile Include="Outputter\ParquetOutputter.cs" />
     <Compile Include="PrimitivesFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

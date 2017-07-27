@@ -1,5 +1,6 @@
 ﻿using Microsoft.Analytics.Interfaces;
 using Parquet.Adla;
+using Parquet.Adla.Outputter;
 
 /*
  * This file contains a syntax to create exposed primitives somewhat simpler
