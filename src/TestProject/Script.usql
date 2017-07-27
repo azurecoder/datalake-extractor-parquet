@@ -9,4 +9,4 @@
               D( customer, amount );
 OUTPUT @a
     TO "/test1.parquet"
-    USING new Parquet.Adla.ParquetOutputter();
+    USING ApacheParquet.Outputter();

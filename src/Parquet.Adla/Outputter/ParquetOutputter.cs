@@ -8,7 +8,7 @@ using System.Text;
 using Parquet;
 using Parquet.Data;
 
-namespace Parquet.Adla
+namespace Parquet.Adla.Outputter
 {
     [SqlUserDefinedOutputter(AtomicFileProcessing = true)]
     public class ParquetOutputter : IOutputter
