@@ -46,7 +46,7 @@ function MergeDll{
     $ilMergePaths = $MergeAssemblies | ForEach-Object { "$srcDir\$_" }
 
 
-    Invoke-Expression "..\tools\ilmerge.exe /wildcards /out:$targetDllPath /targetplatform:v4 $ilMergePaths"
+    Invoke-Expression "$PSScriptRoot\..\tools\ilmerge.exe /wildcards /out:$targetDllPath /targetplatform:v4 $ilMergePaths"
 
     Write-Host "dll written to $targetDllPath"   
 }
