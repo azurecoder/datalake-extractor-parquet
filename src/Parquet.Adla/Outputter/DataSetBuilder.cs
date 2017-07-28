@@ -29,6 +29,8 @@ namespace Parquet.Adla.Outputter
          var ds = new DataSet(_schema.ToArray());
          ds.AddRange(_rows);
 
+         //parquet needs to be written in memory first as ADLA doesn't support seekable streams
+
          using (var ms = new MemoryStream())
          {
             using (var parquet = new ParquetWriter(ms))
