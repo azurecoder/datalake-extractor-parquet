@@ -28,7 +28,7 @@ namespace Parquet.Adla.Outputter
          {
             var se = new SchemaElement(column.Name, column.Type);
          }
-         //kickkkk
+         //kickkkkk
       }
 
       private Row ToRow(IRow row)
