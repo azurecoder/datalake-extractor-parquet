@@ -77,9 +77,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>set outdir=$(ProjectDir)bin\$(ConfigurationName)-single
-md %25outdir%25
-$(SolutionDir)..\tools\ilmerge.exe /wildcards /out:%25outdir%25\$(TargetFileName) /targetplatform:v4 $(TargetDir)Parquet*.dll $(TargetDir)apache-thrift-netcore.dll $(TargetDir)NetBox.dll $(TargetDir)Newtonsoft.Json.dll $(TargetDir)Snappy.Sharp.dll $(TargetDir)System.ValueTuple.dll</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
