@@ -15,54 +15,14 @@ namespace Parquet.Adla.Outputter
    {
       private DataSetBuilder _builder = new DataSetBuilder();
 
-      private DataSet _ds;
-      private ParquetWriter _writer;
-      private MemoryStream _tempStream;
-      private Stream _resultStream;
-
       public override void Output(IRow input, IUnstructuredWriter output)
       {
-         _builder.Add(input);
-
-         Console.WriteLine("hey");
-
-         ISchema schema = input.Schema;
-
-         if (_ds == null)
-         {
-            _ds = new DataSet(new SchemaElement<string>("test"));
-
-            _tempStream = new MemoryStream();
-            _resultStream = output.BaseStream;
-
-            _writer = new ParquetWriter(_tempStream);
-
-            //create DS based on schema
-            //input.Schema
-         }
-
-         for (int i = 0; i < schema.Count; i++)
-         {
-            if (i == 0)
-            {
-               object value = input.Get<object>(i);
-               string sv = value.ToString();
-               _ds.Add(sv);
-            }
-
-            //todo: add more
-         }
-
-
+         _builder.Add(input, output.BaseStream);
       }
 
       public override void Close()
       {
-         _writer.Write(_ds);
-         _writer.Dispose();
-
-         _tempStream.Position = 0;
-         _tempStream.CopyTo(_resultStream);
+         _builder.Dispose();
       }
    }
 }
