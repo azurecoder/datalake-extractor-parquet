@@ -60,5 +60,20 @@ To use the outputter reference Parquet.Adla as follows.
 		USING new Parquet.Adla.Outputter.ParquetOutputter();
 
 ### Extractor
+To use the Extractor reference Parquet.Adla as follows.
+
+	USE DATABASE master;
+	REFERENCE ASSEMBLY [Parquet.Adla];
+
+	DECLARE @input_file string = @"alltypes.plain.parquet";
+	DECLARE @output_file string = @"alltypes.plain.csv";
+
+	@a =
+		EXTRACT bool_col bool, timestamp_col DateTime
+		FROM @input_file USING new Parquet.Adla.Extractors.ParquetExtractor();
+
+	OUTPUT @a
+		TO @output_file
+		USING Outputters.Csv();
 
 ## Limitations
