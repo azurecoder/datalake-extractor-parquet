@@ -9,12 +9,13 @@ param(
 	[string] $BlobStorageAccountName = "",
 	[string] $BlobStorageAccountKey = "",
 	[string] $BlobStorageContainer = "",
-
 	[string] $BlobStoragePath = "",
 	[string] $AzureDataLakeStoreName = "", 
 	[string] $AzureDataLakeAnalyticsName = "",
+	[string] $TenantId = "",
+	[string] $ApplicationId = "",
+	[string] $ApplicationKey = "",
 	[string] $SubscriptionId = ""
-
 )
 
 if($ProjectDir -eq "")
@@ -33,10 +34,12 @@ Write-Host "    configuration: $Configuration"
 Write-Host "    blob storage account name: $BlobStorageAccountName"
 Write-Host "    account Key: $BlobStorageAccountKey"
 Write-Host "    container: $BlobStorageContainer"
-
 Write-Host "    path: $BlobStoragePath"
 Write-Host "    Data Lake Store Name: $AzureDataLakeStoreName"
 Write-Host "    Data Lake Analytics Name: $AzureDataLakeAnalyticsName"
+Write-Host "    Tenant Id: $TenantId"
+Write-Host "    Application Id: $ApplicationId"
+Write-Host "    Application Key: $ApplicationKey"
 Write-Host "    Subscription Id: $SubscriptionId"
 
 
@@ -99,23 +102,24 @@ function UploadAssembliesToAdls() {
 		return
 	}
 
-	Login-AzureRmAccount
+    $ApplicationKey = ConvertTo-SecureString -String $ApplicationKey -AsPlainText -Force
+	$creds = New-Object System.Management.Automation.PSCredential($ApplicationId, $ApplicationKey)
+	Login-AzureRmAccount -Credential $creds -ServicePrincipal -TenantId $TenantId
 	Set-AzureRMContext -SubscriptionId $SubscriptionId 
     Write-Host "Setting subscription to $SubscriptionId"
 	# Copy the assembly to the ADLS
-	Import-AzureRmDataLakeStoreItem -AccountName $AzureDataLakeStoreName -Path $targetDllPath -Destination "/Assemblies/Parquet.Adla.dll"
+	Import-AzureRmDataLakeStoreItem -AccountName $AzureDataLakeStoreName -Path $targetDllPath -Destination "/Assemblies/Parquet.Adla.dll" -Force
     Write-Host "Registering Parquet.Adla.dll assembly to $AzureDataLakeStoreName"
 	# Register the assembly once to avoid this in each script (master db)
-	$job = Submit-AzureRmDataLakeAnalyticsJob -Name "Create Assembly" -AccountName $AzureDataLakeAnalyticsName �ScriptPath "$PSScriptRoot\registerassembly.usql" -DegreeOfParallelism 1
+	$job = Submit-AzureRmDataLakeAnalyticsJob -Name "Create Assembly" -AccountName $AzureDataLakeAnalyticsName -ScriptPath "$PSScriptRoot\registerassembly.usql" -DegreeOfParallelism 1
     Write-Host "Registering script with $AzureDataLakeAnalyticsName"
 	# Check to see make that the job has ended
 	While (($t = Get-AzureRmDataLakeAnalyticsJob -AccountName $AzureDataLakeAnalyticsName -JobId $job.JobId).State -ne "Ended") {
-Write-Host "Job status: "$t.State"..."
-Start-Sleep -seconds 10
+		Write-Host "Job status: "$t.State"..."
+		Start-Sleep -seconds 10
 	}
 }
 
 MergeDll
 PublishToBlobStorage
 UploadAssembliesToAdls
-
