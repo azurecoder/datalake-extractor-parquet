@@ -23,9 +23,24 @@ To install for use with ADLA open a command script at the solution root and ente
 		-BlobStoragePath xx
 		-AzureDataLakeStoreName xx
 		-AzureDataLakeAnalyticsName xx
+		-TenantId xx
+		-ApplicationId xx
+		-ApplicationKey xx
 		-SubscriptionId xx
 
 If the Blob storage parameters are omitted then the script will not deploy to storage and if the ADLS and ADLA names are omitted then the dll will not be deployed to ADLS and regsitered with the catalog.
+
+The deployment uses a Service Principal which must be created to enable a non-interctive login. Use the following guide to create one.
+
+[Creating a Service Principal](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-create-service-principal-portal)
+
+Follow the steps to get the ApplicationId and the Key and then use them in the deployment script.
+
+To find out your TenantId use the following Uri.
+
+https://login.windows.net/xxx.onmicrosoft.com/.well-known/openid-configuration
+
+Replacing xxx with your own Azure Active Directory name. This should give you a list of your subscriptions. The Guid character in each of the Urls is the TenantId.
 
 ## Usage
 ### Outputter
