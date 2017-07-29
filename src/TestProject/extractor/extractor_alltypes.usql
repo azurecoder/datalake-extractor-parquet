@@ -1,4 +1,4 @@
-﻿USE DATABASE master;
+USE DATABASE master
 REFERENCE ASSEMBLY [Parquet.Adla];
 
 DECLARE @input_file string = @"alltypes.plain.parquet";
@@ -11,4 +11,3 @@ DECLARE @output_file string = @"alltypes.plain.csv";
 OUTPUT @a
     TO @output_file
     USING Outputters.Csv();
-

@@ -4,8 +4,8 @@
 #>
 
 param(
-    [string] $ProjectDir,
-    [string] $Configuration,
+  [string] $ProjectDir,
+  [string] $Configuration,
 	[string] $BlobStorageAccountName = "",
 	[string] $BlobStorageAccountKey = "",
 	[string] $BlobStorageContainer = "",
@@ -26,6 +26,7 @@ if($ProjectDir -eq "")
 if($Configuration -eq "")
 {
     $Configuration = "Debug"
+
 }
 
 Write-Host "Parameters:"
@@ -35,11 +36,13 @@ Write-Host "    blob storage account name: $BlobStorageAccountName"
 Write-Host "    account Key: $BlobStorageAccountKey"
 Write-Host "    container: $BlobStorageContainer"
 Write-Host "    path: $BlobStoragePath"
+
 Write-Host "    Data Lake Store Name: $AzureDataLakeStoreName"
 Write-Host "    Data Lake Analytics Name: $AzureDataLakeAnalyticsName"
 Write-Host "    Tenant Id: $TenantId"
 Write-Host "    Application Id: $ApplicationId"
 Write-Host "    Application Key: $ApplicationKey"
+
 Write-Host "    Subscription Id: $SubscriptionId"
 
 
@@ -50,8 +53,7 @@ $blobName = $BlobStoragePath
 function MergeDll{
     $srcDir = "$ProjectDir\bin\$Configuration"
     if(Test-Path -Path $outDir)
-    {
-        Remove-Item -Path $outDir -Recurse -Force
+    {        Remove-Item -Path $outDir -Recurse -Force
     }
     $tmp = New-Item -Path $outDir -ItemType Directory
 
@@ -61,8 +63,7 @@ function MergeDll{
         "NetBox.dll",
         "Newtonsoft.Json.dll",
         "Snappy.Sharp.dll",
-        "System.ValueTuple.dll"
-    )
+        "System.ValueTuple.dll"    )
 
     $ilMergePaths = $MergeAssemblies | ForEach-Object { "$srcDir\$_" }
 
@@ -102,17 +103,18 @@ function UploadAssembliesToAdls() {
 		return
 	}
 
-    $ApplicationKey = ConvertTo-SecureString -String $ApplicationKey -AsPlainText -Force
+
+  $ApplicationKey = ConvertTo-SecureString -String $ApplicationKey -AsPlainText -Force
 	$creds = New-Object System.Management.Automation.PSCredential($ApplicationId, $ApplicationKey)
 	Login-AzureRmAccount -Credential $creds -ServicePrincipal -TenantId $TenantId
 	Set-AzureRMContext -SubscriptionId $SubscriptionId 
-    Write-Host "Setting subscription to $SubscriptionId"
+  Write-Host "Setting subscription to $SubscriptionId"
 	# Copy the assembly to the ADLS
 	Import-AzureRmDataLakeStoreItem -AccountName $AzureDataLakeStoreName -Path $targetDllPath -Destination "/Assemblies/Parquet.Adla.dll" -Force
-    Write-Host "Registering Parquet.Adla.dll assembly to $AzureDataLakeStoreName"
+  Write-Host "Registering Parquet.Adla.dll assembly to $AzureDataLakeStoreName"
 	# Register the assembly once to avoid this in each script (master db)
 	$job = Submit-AzureRmDataLakeAnalyticsJob -Name "Create Assembly" -AccountName $AzureDataLakeAnalyticsName -ScriptPath "$PSScriptRoot\registerassembly.usql" -DegreeOfParallelism 1
-    Write-Host "Registering script with $AzureDataLakeAnalyticsName"
+  Write-Host "Registering script with $AzureDataLakeAnalyticsName"
 	# Check to see make that the job has ended
 	While (($t = Get-AzureRmDataLakeAnalyticsJob -AccountName $AzureDataLakeAnalyticsName -JobId $job.JobId).State -ne "Ended") {
 		Write-Host "Job status: "$t.State"..."
