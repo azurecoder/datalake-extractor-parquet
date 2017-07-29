@@ -1,6 +1,4 @@
-﻿USE DATABASE master;
-CREATE ASSEMBLY IF NOT EXISTS [Parquet.Adla] FROM @"/Assemblies/Parquet.Adla.dll";
-REFERENCE ASSEMBLY [Parquet.Adla];
+﻿REFERENCE ASSEMBLY [Parquet.Adla];
 
 @a  = 
     SELECT * FROM 
@@ -12,4 +10,3 @@ REFERENCE ASSEMBLY [Parquet.Adla];
 OUTPUT @a
     TO "/pqnet/test1.parquet"
     USING new Parquet.Adla.Outputter.ParquetOutputter();
-// http://sqlblog.com/blogs/jorg_klein/archive/2016/09/29/script-azure-data-lake-analytics-assembly-deployment-to-u-sql-catalog.aspx
