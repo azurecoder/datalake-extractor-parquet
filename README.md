@@ -27,8 +27,8 @@ To install for use with ADLA open a command script at the solution root and ente
 
 If the Blob storage parameters are omitted then the script will not deploy to storage and if the ADLS and ADLA names are omitted then the dll will not be deployed to ADLS and regsitered with the catalog.
 
-##Usage
-###Outputter
+## Usage
+### Outputter
 To use the outputter reference Parquet.Adla as follows.
 
 	REFERENCE ASSEMBLY [Parquet.Adla];
@@ -44,6 +44,6 @@ To use the outputter reference Parquet.Adla as follows.
 		TO "/pqnet/test1.parquet"
 		USING new Parquet.Adla.Outputter.ParquetOutputter();
 
-###Extractor
+### Extractor
 
-##Limitations
+## Limitations
