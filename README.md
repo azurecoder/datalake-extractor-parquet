@@ -34,7 +34,7 @@ The deployment uses a Service Principal which must be created to enable a non-in
 
 [Creating a Service Principal](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-create-service-principal-portal)
 
-Follow the steps to get the ApplicationId and the Key and then use them in the deployment script.
+Follow the steps to get the ApplicationId and the Key and then use them in the deployment script. You will also need to select the resources in the Azure Portal (ADLA and ADLS) and add give the Service Principal at least a contributor role under the IAM tab.
 
 To find out your TenantId use the following Uri.
 
