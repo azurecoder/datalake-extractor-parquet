@@ -4,8 +4,8 @@
 #>
 
 param(
-  [string] $ProjectDir,
-  [string] $Configuration,
+	[string] $ProjectDir,
+  	[string] $Configuration,
 	[string] $BlobStorageAccountName = "",
 	[string] $BlobStorageAccountKey = "",
 	[string] $BlobStorageContainer = "",
@@ -45,21 +45,25 @@ Write-Host "    Subscription Id: $SubscriptionId"
 
 
 $outDir = "$ProjectDir\bin\$Configuration-Merged"
-$targetDllPath = "$outDir\Parquet.Adla.dll"$blobName = $BlobStoragePath
+$targetDllPath = "$outDir\Parquet.Adla.dll"
+$blobName = $BlobStoragePath
 
 function MergeDll{
     $srcDir = "$ProjectDir\bin\$Configuration"
     if(Test-Path -Path $outDir)
-    {        Remove-Item -Path $outDir -Recurse -Force
+    {        
+		Remove-Item -Path $outDir -Recurse -Force
     }
     $tmp = New-Item -Path $outDir -ItemType Directory
 
     $MergeAssemblies = @(
-        "Parquet*.dll",        "apache-thrift-netcore.dll",
+		"Parquet*.dll",        
+		"apache-thrift-netcore.dll",
         "NetBox.dll",
         "Newtonsoft.Json.dll",
         "Snappy.Sharp.dll",
-        "System.ValueTuple.dll"    )
+		"System.ValueTuple.dll"    
+		)
 
     $ilMergePaths = $MergeAssemblies | ForEach-Object { "$srcDir\$_" }
 
@@ -115,7 +119,6 @@ function UploadAssembliesToAdls() {
 	While (($t = Get-AzureRmDataLakeAnalyticsJob -AccountName $AzureDataLakeAnalyticsName -JobId $job.JobId).State -ne "Ended") {
 		Write-Host "Job status: "$t.State"..."
 		Start-Sleep -seconds 10
-
 	}
 }
 
