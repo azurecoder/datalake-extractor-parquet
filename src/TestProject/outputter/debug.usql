@@ -17,3 +17,5 @@ REFERENCE ASSEMBLY [Parquet.Adla];
 OUTPUT @a
     TO "/test1.parquet"
     USING new Parquet.Adla.Outputter.ParquetOutputter();
+
+
